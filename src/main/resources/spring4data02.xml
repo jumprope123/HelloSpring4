@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--어노테이션 기반 bean 설정-->
+    <context:component-scan base-package="shin.data.service, shin.data.dao"/>
+
+
+    <!--표준 JDBC API : 소규모-->
+
+    <!-- DBCP API : 대규모 -->
+    <!-- database connection pool (dbcp) -->
+    <!-- 요청이 생길 때 마다 connecetion 객체를 생성하는 것이 아니라 -->
+    <!-- 일정 수의 connection 객체를 미리 만들어 pool에 저장해 두고 -->
+    <!-- 요청이 발생하면 pool에서 connection 객체를 가져다 쓰게 하는 방식 -->
+    <!-- connection 객체를 다 사용하면 바로 파기하지 않고 pool에 반납 -->
+    <bean id="dbcpDataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
+        <property name="url" value="jdbc:mariadb://mariadb.cpjqbyvk0luc.ap-northeast-2.rds.amazonaws.com:3306/playground"/>
+        <property name="username" value="playground"/>
+        <property name="password" value="playground2020"/>
+    </bean>
+
+    <!--JNDI API : 분산환경-->
+
+    <!--스프링 JDBC template 정의-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dbcpDataSource"/>
+    </bean>
+
+</beans>
